@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Tanglish Tamil Translator</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/dashboard.css" />
+
+</head>
+<body>
+
+<!-- APP SHELL -->
+<div class="app-shell active" id="app-shell">
+
+  <!-- TOP NAVBAR -->
+  <nav class="top-nav">
+    <button class="hamburger-btn" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button>
+    <a class="nav-brand" href="#">
+      <div class="ico">த</div>
+      <span>TamilNLP</span>
+    </a>
+    <div class="nav-spacer"></div>
+    <div class="nav-actions">
+      <button class="nav-icon-btn" title="Notifications"><i class="fa fa-bell"></i></button>
+      <button class="nav-icon-btn" title="Help"><i class="fa fa-question-circle"></i></button>
+      <div class="avatar-btn" id="nav-avatar" onclick="window.location='profile.html'" title="Profile">A</div>
+    </div>
+  </nav>
+
+  <!-- SIDEBAR OVERLAY -->
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <div class="app-body">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="sidebar-avatar">A</div>
+        <div class="sidebar-user-info">
+          <div class="name" id="sidebar-name">Arjun Kumar</div>
+          <div class="role">NLP Student</div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section-label">Main</div>
+        <a class="nav-item active" href="dashboard.html"><i class="fa fa-home"></i> Dashboard</a>
+        <a class="nav-item" href="translator.html"><i class="fa fa-language"></i> Translator <span class="badge-pill">NLP</span></a>
+        <a class="nav-item" href="history.html"><i class="fa fa-history"></i> History</a>
+        <div class="sidebar-section-label" style="margin-top:8px">Account</div>
+        <a class="nav-item" href="profile.html"><i class="fa fa-user-circle"></i> Profile</a>
+        <a class="nav-item" href="settings.html"><i class="fa fa-cog"></i> Settings</a>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="btn-logout" onclick="doLogout()"><i class="fa fa-sign-out-alt"></i> Logout</button>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+      <!-- WELCOME BANNER -->
+      <div class="welcome-banner">
+        <div class="welcome-text">
+          <h3>வணக்கம், <span id="welcome-name">Arjun</span>! 🙏</h3>
+          <p>Translate your Tanglish text to beautiful Tamil Unicode and boost your Tamil learning</p>
+        </div>
+        <div class="welcome-icon">🎓</div>
+      </div>
+
+      <!-- DAILY STREAK CARD -->
+      <div class="stats-row" style="margin-bottom: 24px;">
+        <div class="stat-card">
+          <div class="stat-icon gold" style="background: rgba(255,215,0,0.15); color: #e67e22"><i class="fa fa-fire"></i></div>
+          <div>
+            <div class="stat-num" id="dash-streak">1</div>
+            <div class="stat-label">Daily Streak (Days)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STATS -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-icon maroon"><i class="fa fa-language"></i></div>
+          <div><div class="stat-num" id="stat-total">0</div><div class="stat-label">Total Translations</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon gold"><i class="fa fa-calendar-check"></i></div>
+          <div><div class="stat-num" id="stat-today">0</div><div class="stat-label">Today's Translations</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon green"><i class="fa fa-check-circle"></i></div>
+          <div><div class="stat-num">98%</div><div class="stat-label">Accuracy Rate</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon blue"><i class="fa fa-clock"></i></div>
+          <div><div class="stat-num" id="stat-last">–</div><div class="stat-label">Last Login</div></div>
+        </div>
+      </div>
+
+      <!-- QUICK TRANSLATOR -->
+      <div class="translator-card">
+        <div class="translator-header">
+          <h3><i class="fa fa-magic" style="margin-right:8px"></i>Quick Translate</h3>
+          <span class="badge">Powered by Indic NLP</span>
+        </div>
+        <div class="translator-body">
+          <div class="translator-panels">
+            <!-- INPUT PANEL -->
+            <div>
+              <div class="panel-label"><span class="dot"></span> Tanglish Input</div>
+              <div class="panel-relative">
+                <textarea class="trans-input" id="tanglish-input"
+                  placeholder="Type Tanglish here...&#10;e.g. Vanakkam, eppadi irukkinga?"
+                  oninput="updateChar()"></textarea>
+                <div class="loading-overlay" id="loading-overlay">
+                  <div class="loading-spinner"></div>
+                  <span>Translating...</span>
+                </div>
+              </div>
+              <div class="char-count"><span id="char-count">0</span>/500</div>
+              <div class="quick-phrases">
+                <div class="quick-chip" onclick="setInput('Vanakkam')">Vanakkam</div>
+                <div class="quick-chip" onclick="setInput('Eppadi irukkinga')">Eppadi irukkinga</div>
+                <div class="quick-chip" onclick="setInput('Nandri')">Nandri</div>
+                <div class="quick-chip" onclick="setInput('Romba nandri')">Romba nandri</div>
+                <div class="quick-chip" onclick="setInput('En peyar Arjun')">En peyar Arjun</div>
+              </div>
+            </div>
+
+            <!-- ARROW + TRANSLATE BUTTON -->
+            <div class="panel-arrow">
+              <span class="arrow-icon">⟶</span>
+              <button class="btn-translate" onclick="doTranslate()">
+                <i class="fa fa-exchange-alt" style="margin-right:4px"></i> Translate
+              </button>
+              <span class="arrow-icon">⟶</span>
+            </div>
+
+            <!-- OUTPUT PANEL -->
+            <div>
+              <div class="panel-label"><span class="dot gold"></span> Tamil Output</div>
+              <textarea class="trans-input tamil-output" id="tamil-output"
+                placeholder="தமிழ் மொழிபெயர்ப்பு இங்கே தோன்றும்..." readonly></textarea>
+              <div class="panel-actions">
+                <button class="btn-action gold" onclick="copyOutput()"><i class="fa fa-copy"></i> Copy</button>
+                <button class="btn-action" onclick="clearAll()"><i class="fa fa-trash"></i> Clear</button>
+                <button class="btn-action" onclick="speakOutput()"><i class="fa fa-volume-up"></i> Speak</button>
+                <button class="btn-action" id="btn-fav" onclick="toggleFavoriteCurrent()"><i class="fa-regular fa-star"></i> Star</button>
+              </div>
+            </div>
+          </div>
+          <div class="tamil-divider" style="margin-top:16px">• • •</div>
+        </div>
+      </div>
+
+      <!-- MAIN SPLIT ROW: HISTORY & GAMIFICATION -->
+      <div style="display: grid; grid-template-columns: 1.8fr 1fr; gap: 20px; margin-top: 24px; align-items: start;">
+        <!-- RECENT HISTORY -->
+        <div class="history-card" style="margin-bottom: 0">
+          <div class="history-header">
+            <h4><i class="fa fa-history" style="margin-right:8px"></i>Recent Translations</h4>
+            <a href="history.html" class="btn-action">View All <i class="fa fa-arrow-right" style="margin-left:4px"></i></a>
+          </div>
+          <div id="dashboard-history-body">
+            <div class="empty-history">
+              <i class="fa fa-language"></i>
+              <p>No translations yet. Try translating something!</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- GAMIFICATION & MISSIONS -->
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+          <!-- SAVED VOCABULARY CARD -->
+          <div class="history-card" style="margin-bottom:0">
+            <div class="history-header">
+              <h4><i class="fa fa-star" style="color:#f1c40f"></i> Saved Vocabulary</h4>
+            </div>
+            <div id="dashboard-favorites-body" style="padding: 16px; display: flex; flex-direction: column; gap: 10px; max-height: 250px; overflow-y: auto;">
+              <div class="empty-history" style="padding: 10px 0;">
+                <p style="font-size:0.8rem">Star translations to save them here for practice.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- DAILY MISSIONS CARD -->
+          <div class="history-card" style="margin-bottom:0">
+            <div class="history-header">
+              <h4><i class="fa fa-tasks" style="color:var(--maroon)"></i> Daily Missions</h4>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:12px; padding:8px 0">
+              <div style="display:flex; align-items:center; gap:10px; font-size:0.85rem">
+                <i class="fa fa-check-circle" style="color:#2ecc71; font-size:1.1rem"></i>
+                <span style="text-decoration:line-through; color:var(--text-muted)">Login to Assistant</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:10px; font-size:0.85rem">
+                <i class="fa fa-circle-notch" style="color:var(--gold-dark); font-size:1.1rem"></i>
+                <span>Complete a Kids Quiz</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:10px; font-size:0.85rem">
+                <i class="fa fa-circle-notch" style="color:var(--gold-dark); font-size:1.1rem"></i>
+                <span>Use accessibility keyboard</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<div class="toast-container" id="toast-container"></div>
+
+<script src="../js/app.js"></script>
+<script src="../js/translator.js"></script>
+<script src="../js/voice.js"></script>
+<script>
+  // Sync dashboard gamification data on load
+  document.addEventListener('DOMContentLoaded', () => {
+    const session = getSession();
+    if (!session) return;
+    
+    // Welcome message
+    const wName = document.getElementById('welcome-name');
+    if (wName) wName.textContent = session.name.split(' ')[0];
+
+    const streakVal = parseInt(localStorage.getItem('tnlp_streak_' + session.username) || '1');
+    
+    // Update labels
+    const streakEl = document.getElementById('dash-streak');
+    if (streakEl) streakEl.textContent = streakVal;
+  });
+</script>
+</body>
+</html>

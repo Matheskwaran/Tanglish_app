@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login — Tanglish Tamil Translator</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/auth.css" />
+
+</head>
+<body>
+
+<div class="page auth-page active" id="page-login">
+  <!-- Kolam decorative rings -->
+  <div class="kolam-deco"></div>
+  <div class="kolam-deco"></div>
+  <div class="kolam-deco"></div>
+  <div class="kolam-deco"></div>
+  <div class="kolam-deco"></div>
+  <div class="kolam-deco"></div>
+
+  <div class="auth-card">
+    <!-- Brand -->
+    <div class="auth-brand">
+      <div class="brand-icon">த</div>
+      <h1>Tanglish → Tamil</h1>
+      <p>NLP Translation Platform</p>
+    </div>
+
+    <h2>Welcome Back</h2>
+    <p class="subtitle">Sign in to continue translating</p>
+
+    <form onsubmit="event.preventDefault(); doLogin();">
+      <!-- Email / Username -->
+      <div style="margin-bottom:16px">
+        <label class="form-label">Email or Username</label>
+        <input type="text" class="form-control" id="login-user" placeholder="yourname@example.com" />
+        <div class="field-error" id="err-login-user">Please enter your email or username</div>
+      </div>
+
+      <!-- Password -->
+      <div style="margin-bottom:12px">
+        <label class="form-label">Password</label>
+        <div class="input-group">
+          <input type="password" class="form-control" id="login-pass" placeholder="••••••••" />
+          <span class="input-group-text" onclick="togglePass('login-pass', this)">
+            <i class="fa fa-eye-slash"></i>
+          </span>
+        </div>
+        <div class="field-error" id="err-login-pass">Please enter your password</div>
+      </div>
+
+      <!-- Remember / Forgot -->
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="remember-me" />
+          <label class="form-check-label" for="remember-me">Remember me</label>
+        </div>
+        <a href="forgot_password.html" class="auth-link" style="font-size:0.82rem">Forgot Password?</a>
+      </div>
+
+      <button type="submit" class="btn-primary-auth">Sign In</button>
+    </form>
+
+    <div class="auth-footer">
+      Don't have an account?
+      <a href="signup.html" class="auth-link">Create Account</a>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toast-container"></div>
+
+<script src="../js/auth.js"></script>
+<script src="../js/app.js"></script>
+</body>
+</html>

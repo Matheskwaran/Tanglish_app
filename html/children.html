@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Children Mode — Tamil Learning Assistant</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/children.css" />
+</head>
+<body>
+<div class="app-shell active">
+  <!-- TOP NAVBAR -->
+  <nav class="top-nav">
+    <button class="hamburger-btn" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button>
+    <a class="nav-brand" href="#">
+      <div class="ico">த</div>
+      <span>TamilKids</span>
+    </a>
+    <div class="nav-spacer"></div>
+    <div class="nav-actions">
+      <div class="kids-stars-counter"><i class="fa fa-star star-spin"></i> <span id="kids-stars">0</span> Stars</div>
+      <button class="nav-icon-btn" onclick="window.location='settings.html'"><i class="fa fa-cog"></i></button>
+      <div class="avatar-btn" id="nav-avatar" onclick="window.location='profile.html'">A</div>
+    </div>
+  </nav>
+  
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+  <div class="app-body">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="sidebar-avatar">A</div>
+        <div class="sidebar-user-info">
+          <div class="name" id="sidebar-name">Arjun Kumar</div>
+          <div class="role">NLP Student</div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section-label">Main</div>
+        <a class="nav-item" href="dashboard.html"><i class="fa fa-home"></i> Dashboard</a>
+        <a class="nav-item" href="translator.html"><i class="fa fa-language"></i> Translator</a>
+        <a class="nav-item" href="history.html"><i class="fa fa-history"></i> History</a>
+        <div class="sidebar-section-label" style="margin-top:8px">Account</div>
+        <a class="nav-item" href="profile.html"><i class="fa fa-user-circle"></i> Profile</a>
+        <a class="nav-item" href="settings.html"><i class="fa fa-cog"></i> Settings</a>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="btn-logout" onclick="doLogout()"><i class="fa fa-sign-out-alt"></i> Logout</button>
+      </div>
+    </aside>
+
+    <!-- MAIN KIDS CONTENT -->
+    <main class="main-content kids-theme">
+      
+      <!-- HERO BANNER -->
+      <div class="kids-hero">
+        <div class="kids-hero-left">
+          <h2>வணக்கம் குட்டீஸ்! 🌟</h2>
+          <p>Welcome to Tamil Kids Paradise! Let's learn Tamil letters, read stories, and play games together!</p>
+          <div class="mascot-bubble">
+            <span class="bubble-text">Hi! I'm Thambi the Tiger! Click on a letter below to hear its sound! 🐯</span>
+          </div>
+        </div>
+        <div class="kids-mascot">🐯</div>
+      </div>
+
+      <!-- MAIN TABS -->
+      <div class="kids-tabs">
+        <button class="tab-btn active" id="tab-btn-letters" onclick="switchKidsTab('letters')"><i class="fa fa-font"></i> Alphabet Board</button>
+        <button class="tab-btn" id="tab-btn-stories" onclick="switchKidsTab('stories')"><i class="fa fa-book-open"></i> Illustrated Stories</button>
+        <button class="tab-btn" id="tab-btn-quiz" onclick="switchKidsTab('quiz')"><i class="fa fa-gamepad"></i> Kids Quiz Arena</button>
+        <button class="tab-btn" id="tab-btn-dictionary" onclick="switchKidsTab('dictionary')"><i class="fa fa-book"></i> Picture Dictionary</button>
+      </div>
+
+      <!-- ALPHABET BOARD -->
+      <section id="kids-view-letters" class="kids-view active">
+        <h3 class="kids-section-title">உயிரெழுத்துக்கள் (Vowels)</h3>
+        <div class="letters-grid" id="vowels-container">
+          <!-- Vowels populated dynamically -->
+        </div>
+
+        <h3 class="kids-section-title" style="margin-top: 30px;">மெய்யெழுத்துக்கள் (Consonants)</h3>
+        <div class="letters-grid" id="consonants-container">
+          <!-- Consonants populated dynamically -->
+        </div>
+
+        <!-- MODAL CARD POPUP -->
+        <div id="letter-popup" class="letter-modal" onclick="closeLetterPopup()">
+          <div class="letter-modal-content" onclick="event.stopPropagation()">
+            <span class="close-btn" onclick="closeLetterPopup()">&times;</span>
+            <div class="modal-big-letter" id="modal-letter">அ</div>
+            <div class="modal-tamil-word" id="modal-word">அணில்</div>
+            <div class="modal-english-word" id="modal-translation">Squirrel</div>
+            <div class="modal-illustration" id="modal-emoji">🐿️</div>
+            <button class="btn-play-sound" onclick="speakCurrentLetter()"><i class="fa fa-volume-up"></i> Play Sound</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- STORIES SECTION -->
+      <section id="kids-view-stories" class="kids-view">
+        <div class="stories-layout">
+          <div class="stories-list" id="stories-menu">
+            <!-- Stories lists populated dynamically -->
+          </div>
+          <div class="story-display-card">
+            <div class="story-illustration" id="story-pic">🦊</div>
+            <h3 id="story-title">Choose a Story!</h3>
+            <div class="story-text" id="story-content">
+              Select a story from the left list to read and listen to the Tamil narration. Keep leveling up!
+            </div>
+            <div class="story-actions">
+              <button class="kids-action-btn" id="btn-narrate-story" onclick="narrateStory()"><i class="fa fa-volume-up"></i> Listen to Story</button>
+              <button class="kids-action-btn outline" onclick="stopStory()"><i class="fa fa-stop"></i> Stop</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- QUIZ ARENA -->
+      <section id="kids-view-quiz" class="kids-view">
+        <div class="quiz-container">
+          <div class="quiz-progress-bar">
+            <div class="quiz-progress-fill" id="quiz-progress" style="width: 20%"></div>
+          </div>
+          <div class="quiz-card">
+            <div class="quiz-score-header">
+              <span>Question <span id="q-num">1</span> of 5</span>
+              <span>Score: <span id="quiz-local-score">0</span></span>
+            </div>
+            <div class="quiz-question-illustration" id="quiz-emoji">❓</div>
+            <h3 class="quiz-question" id="quiz-question-text">Identify the correct Tamil word for the illustration below!</h3>
+            <div class="quiz-options" id="quiz-options-box">
+              <!-- Options populated dynamically -->
+            </div>
+          </div>
+          <div class="quiz-footer" style="display:none" id="quiz-next-footer">
+            <button class="kids-action-btn" onclick="nextQuizQuestion()">Next Question <i class="fa fa-arrow-right"></i></button>
+          </div>
+        </div>
+      </section>
+
+      <!-- PICTURE DICTIONARY -->
+      <section id="kids-view-dictionary" class="kids-view">
+        <h3 class="kids-section-title">Picture Dictionary (பட அகராதி)</h3>
+        <div class="dict-controls" style="margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+          <button class="kids-action-btn" id="dict-cat-animals" onclick="filterDictCategory('animals')">🐯 Animals</button>
+          <button class="kids-action-btn outline" id="dict-cat-fruits" onclick="filterDictCategory('fruits')">🍇 Fruits</button>
+          <button class="kids-action-btn outline" id="dict-cat-colors" onclick="filterDictCategory('colors')">🎨 Colors</button>
+          <button class="kids-action-btn outline" id="dict-cat-numbers" onclick="filterDictCategory('numbers')">🔢 Numbers</button>
+        </div>
+        <div class="dict-grid" id="dict-container">
+          <!-- Populated dynamically -->
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<div class="toast-container" id="toast-container"></div>
+<script src="../js/app.js"></script>
+<script src="../js/children.js"></script>
+<script src="../js/voice.js"></script>
+</body>
+</html>

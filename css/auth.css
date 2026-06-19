@@ -1,0 +1,137 @@
+/* ═══════════════════════════════════════════════════
+   TANGLISH → TAMIL TRANSLATOR  |  auth.css
+   Login · Signup · Forgot Password
+═══════════════════════════════════════════════════ */
+
+/* ── AUTH PAGE WRAPPER ────────────────────────────── */
+.page { display: none; min-height: 100vh; }
+.page.active { display: flex; }
+
+.auth-page {
+  background: linear-gradient(180deg, var(--maroon-light) 0%, var(--gold-pale) 45%, var(--maroon) 100%);
+  align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+  padding: 20px;
+}
+.auth-page::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(255, 246, 133, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(0, 221, 255, 0.12) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* ── KOLAM DECORATIVE CIRCLES ─────────────────────── */
+.kolam-deco {
+  position: absolute; border-radius: 50%;
+  border: 1px solid rgba(255, 246, 133, 0.2); pointer-events: none;
+}
+.kolam-deco:nth-child(1) { width:600px; height:600px; top:-200px; right:-200px; border-width:2px; }
+.kolam-deco:nth-child(2) { width:400px; height:400px; top:-100px; right:-100px; }
+.kolam-deco:nth-child(3) { width:300px; height:300px; bottom:-100px; left:-100px; border-color:rgba(0, 221, 255, 0.12); }
+.kolam-deco:nth-child(4) { width:500px; height:500px; bottom:-200px; left:-200px; border-color:rgba(0, 221, 255, 0.08); }
+.kolam-deco:nth-child(5) {
+  width:120px; height:120px; top:15%; left:8%;
+  border-color:rgba(255, 246, 133, 0.25); animation: spin 20s linear infinite;
+}
+.kolam-deco:nth-child(6) {
+  width:60px; height:60px; bottom:20%; right:10%;
+  border-color:rgba(0, 221, 255, 0.3); animation: spin 15s linear infinite reverse;
+}
+
+/* ── AUTH CARD ────────────────────────────────────── */
+.auth-card {
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,215,0,0.2);
+  border-radius: 24px; padding: 36px 40px;
+  width: 100%; max-width: 440px;
+  position: relative; z-index: 2;
+  animation: fadeUp 0.5s ease both;
+}
+.auth-card h2 { font-family: 'Cinzel', serif; color: var(--gold); font-size: 1.3rem; margin-bottom: 6px; }
+.auth-card .subtitle { color: rgba(255,248,231,0.6); font-size: 0.83rem; margin-bottom: 24px; }
+
+/* ── AUTH BRAND ───────────────────────────────────── */
+.auth-brand { text-align: center; margin-bottom: 28px; }
+.auth-brand .brand-icon {
+  width: 64px; height: 64px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  border-radius: 18px; display: inline-flex; align-items: center; justify-content: center;
+  font-family: 'Cinzel', serif; font-size: 28px; font-weight: 900;
+  color: var(--maroon-deep); margin-bottom: 12px;
+  box-shadow: 0 4px 20px rgba(255,215,0,0.4);
+}
+.auth-brand h1 { font-family: 'Cinzel', serif; font-size: 1.4rem; color: var(--gold); letter-spacing: 0.04em; font-weight: 700; }
+.auth-brand p  { color: rgba(255,248,231,0.65); font-size: 0.82rem; margin-top: 4px; }
+
+/* ── AUTH FORM CONTROLS ───────────────────────────── */
+.form-label { color: rgba(255,248,231,0.8); font-size: 0.82rem; font-weight: 500; margin-bottom: 6px; display: block; }
+
+.form-control, .form-select {
+  background: rgba(255,255,255,0.07) !important;
+  border: 1px solid rgba(255,215,0,0.2) !important;
+  border-radius: 10px !important;
+  color: #fff8e7 !important; padding: 11px 14px;
+  font-size: 0.9rem; transition: border-color .2s, box-shadow .2s;
+  width: 100%; outline: none; font-family: 'DM Sans', sans-serif;
+}
+.form-control::placeholder { color: rgba(255,248,231,0.35) !important; }
+.form-control:focus {
+  border-color: var(--gold) !important;
+  box-shadow: 0 0 0 3px rgba(255,215,0,0.12) !important;
+  background: rgba(255,255,255,0.1) !important;
+}
+
+/* Input group (password toggle) */
+.input-group { display: flex; }
+.input-group .form-control { border-right: none !important; border-radius: 10px 0 0 10px !important; }
+.input-group-text {
+  background: rgba(255,255,255,0.07) !important;
+  border: 1px solid rgba(255,215,0,0.2) !important;
+  border-left: none !important;
+  border-radius: 0 10px 10px 0 !important;
+  color: rgba(255,248,231,0.5) !important; cursor: pointer;
+  display: flex; align-items: center; padding: 0 12px;
+}
+.input-group-text:hover { color: var(--gold) !important; }
+
+/* ── AUTH BUTTON ──────────────────────────────────── */
+.btn-primary-auth {
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  border: none; border-radius: 10px; color: var(--maroon-deep);
+  font-weight: 700; padding: 12px; font-size: 0.95rem;
+  width: 100%; cursor: pointer; transition: transform .15s, box-shadow .15s;
+  letter-spacing: 0.02em; font-family: 'DM Sans', sans-serif;
+}
+.btn-primary-auth:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(255,215,0,0.4); }
+.btn-primary-auth:active { transform: translateY(0); }
+
+/* ── REMEMBER ME / CHECKBOX ───────────────────────── */
+.form-check { display: flex; align-items: center; gap: 8px; }
+.form-check-input {
+  width: 16px; height: 16px; cursor: pointer;
+  accent-color: var(--gold); border-radius: 4px;
+}
+.form-check-label { color: rgba(255,248,231,0.65); font-size: 0.83rem; }
+
+/* ── LINKS ────────────────────────────────────────── */
+.auth-link { color: var(--gold) !important; text-decoration: none; font-weight: 500; }
+.auth-link:hover { text-decoration: underline; color: #fff !important; }
+.auth-footer { text-align: center; margin-top: 20px; font-size: 0.82rem; color: rgba(255,248,231,0.5); }
+.forgot-link { float: right; font-size: 0.82rem; }
+
+/* ── FIELD ERROR ──────────────────────────────────── */
+.field-error { color: #ff8fa0; font-size: 0.75rem; margin-top: 4px; display: none; }
+.field-error.show { display: block; }
+
+/* ── FORM DIVIDER ─────────────────────────────────── */
+.auth-divider { display: flex; align-items: center; gap: 12px; margin: 20px 0; }
+.auth-divider::before, .auth-divider::after { content: ''; flex: 1; height: 1px; background: rgba(255,215,0,0.15); }
+.auth-divider span { color: rgba(255,248,231,0.4); font-size: 0.78rem; }
+
+/* ── RESPONSIVE ───────────────────────────────────── */
+@media (max-width: 480px) {
+  .auth-card { padding: 28px 22px; }
+}

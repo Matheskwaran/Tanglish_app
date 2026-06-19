@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Settings — Tanglish Tamil Translator</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/profile.css" />
+
+</head>
+<body>
+<div class="app-shell active">
+  <nav class="top-nav">
+    <button class="hamburger-btn" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button>
+    <a class="nav-brand" href="#"><div class="ico">த</div><span>TamilNLP</span></a>
+    <div class="nav-spacer"></div>
+    <div class="nav-actions">
+      <button class="nav-icon-btn"><i class="fa fa-bell"></i></button>
+      <div class="avatar-btn" id="nav-avatar" onclick="window.location='profile.html'">A</div>
+    </div>
+  </nav>
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+  <div class="app-body">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="sidebar-avatar">A</div>
+        <div class="sidebar-user-info">
+          <div class="name" id="sidebar-name">Arjun Kumar</div>
+          <div class="role">NLP Student</div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section-label">Main</div>
+        <a class="nav-item" href="dashboard.html"><i class="fa fa-home"></i> Dashboard</a>
+        <a class="nav-item" href="translator.html"><i class="fa fa-language"></i> Translator <span class="badge-pill">NLP</span></a>
+        <a class="nav-item" href="history.html"><i class="fa fa-history"></i> History</a>
+        <div class="sidebar-section-label" style="margin-top:8px">Account</div>
+        <a class="nav-item" href="profile.html"><i class="fa fa-user-circle"></i> Profile</a>
+        <a class="nav-item active" href="settings.html"><i class="fa fa-cog"></i> Settings</a>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="btn-logout" onclick="doLogout()"><i class="fa fa-sign-out-alt"></i> Logout</button>
+      </div>
+    </aside>
+    <main class="main-content">
+      <div class="page-header">
+        <h2><i class="fa fa-cog" style="margin-right:8px"></i>Settings</h2>
+        <p>Customize your experience and preferences</p>
+      </div>
+
+      <!-- APPEARANCE -->
+      <div class="settings-section-title">Appearance</div>
+      <div class="settings-card">
+        <div class="settings-item">
+          <div class="settings-item-icon"><i class="fa fa-moon"></i></div>
+          <div class="settings-item-info">
+            <div class="title">Dark Mode</div>
+            <div class="desc">Switch between light and dark theme</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="dark-mode-toggle" onchange="toggleDarkMode(this)" />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="settings-item">
+          <div class="settings-item-icon"><i class="fa fa-text-height"></i></div>
+          <div class="settings-item-info">
+            <div class="title">Font Size</div>
+            <div class="desc">Adjust text size for readability</div>
+          </div>
+          <select class="settings-select" id="settings-font-size">
+            <option>Small</option>
+            <option>Medium</option>
+            <option>Large</option>
+            <option>Extra Large</option>
+          </select>
+        </div>
+        <div class="settings-item">
+          <div class="settings-item-icon"><i class="fa fa-globe"></i></div>
+          <div class="settings-item-info">
+            <div class="title">Language Preference</div>
+            <div class="desc">Interface display language</div>
+          </div>
+          <select class="settings-select" id="settings-lang-pref">
+            <option>English</option>
+            <option>தமிழ் (Tamil)</option>
+          </select>
+        </div>
+      </div>
+ 
+       <!-- NOTIFICATIONS -->
+       <div class="settings-section-title">Notifications</div>
+       <div class="settings-card">
+         <div class="settings-item">
+           <div class="settings-item-icon"><i class="fa fa-bell"></i></div>
+           <div class="settings-item-info">
+             <div class="title">Email Notifications</div>
+             <div class="desc">Receive updates via email</div>
+           </div>
+           <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
+         </div>
+         <div class="settings-item">
+           <div class="settings-item-icon"><i class="fa fa-desktop"></i></div>
+           <div class="settings-item-info">
+             <div class="title">Browser Notifications</div>
+             <div class="desc">Show desktop notifications</div>
+           </div>
+           <label class="toggle-switch"><input type="checkbox" /><span class="toggle-slider"></span></label>
+         </div>
+       </div>
+ 
+       <!-- PRIVACY -->
+       <div class="settings-section-title">Privacy &amp; Data</div>
+       <div class="settings-card">
+         <div class="settings-item">
+           <div class="settings-item-icon"><i class="fa fa-shield-alt"></i></div>
+           <div class="settings-item-info">
+             <div class="title">Save Translation History</div>
+             <div class="desc">Keep a record of your translations</div>
+           </div>
+           <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
+         </div>
+         <div class="settings-item">
+           <div class="settings-item-icon"><i class="fa fa-chart-line"></i></div>
+           <div class="settings-item-info">
+             <div class="title">Usage Analytics</div>
+             <div class="desc">Help improve the NLP model</div>
+           </div>
+           <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
+         </div>
+         <div class="settings-item">
+           <div class="settings-item-icon" style="background:rgba(231,76,60,0.1); color:#e74c3c"><i class="fa fa-trash-alt"></i></div>
+           <div class="settings-item-info">
+             <div class="title">Delete Account</div>
+             <div class="desc">Permanently delete your account and data</div>
+           </div>
+           <button class="btn-action" style="color:#e74c3c; border-color:#e74c3c; white-space:nowrap"
+             onclick="showToast('Account deletion requires email confirmation','info')">Delete</button>
+         </div>
+       </div>
+ 
+       <div style="margin-top:16px">
+         <button class="btn-maroon" onclick="saveSettings()">
+           <i class="fa fa-save" style="margin-right:6px"></i>Save Settings
+         </button>
+       </div>
+     </main>
+   </div>
+ </div>
+ <div class="toast-container" id="toast-container"></div>
+ <script src="../js/app.js"></script>
+ <script src="../js/voice.js"></script>
+ <script>
+   // Load settings values on load
+   const theme = localStorage.getItem('tnlp_theme');
+   if (theme === 'dark') {
+     document.documentElement.setAttribute('data-theme','dark');
+     const toggle = document.getElementById('dark-mode-toggle');
+     if (toggle) toggle.checked = true;
+   }
+   
+   const fSize = localStorage.getItem('tnlp_font_size') || 'Medium';
+   const sizeSelect = document.getElementById('settings-font-size');
+   if (sizeSelect) sizeSelect.value = fSize;
+   
+   const langPref = localStorage.getItem('tnlp_lang_pref') || 'English';
+   const langSelect = document.getElementById('settings-lang-pref');
+   if (langSelect) langSelect.value = langPref;
+ 
+   function toggleDarkMode(chk) {
+     document.documentElement.setAttribute('data-theme', chk.checked ? 'dark' : 'light');
+     localStorage.setItem('tnlp_theme', chk.checked ? 'dark' : 'light');
+     showToast(chk.checked ? 'Dark mode enabled 🌙' : 'Light mode enabled ☀️', 'info');
+   }
+   
+   function saveSettings() {
+     const sizeVal = document.getElementById('settings-font-size').value;
+     const langVal = document.getElementById('settings-lang-pref').value;
+     
+     localStorage.setItem('tnlp_font_size', sizeVal);
+     localStorage.setItem('tnlp_lang_pref', langVal);
+     
+     showToast('Settings saved! Applying changes...', 'success');
+     
+     // Apply font-size instantly
+     if (typeof applyFontSize === 'function') applyFontSize();
+     
+     // Reload to trigger translation engine swap
+     setTimeout(() => window.location.reload(), 800);
+   }
+ </script>
+ </body>
+ </html>

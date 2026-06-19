@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>History — Tanglish Tamil Translator</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/dashboard.css" />
+
+</head>
+<body>
+<div class="app-shell active">
+  <nav class="top-nav">
+    <button class="hamburger-btn" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button>
+    <a class="nav-brand" href="#"><div class="ico">த</div><span>TamilNLP</span></a>
+    <div class="nav-spacer"></div>
+    <div class="nav-actions">
+      <button class="nav-icon-btn"><i class="fa fa-bell"></i></button>
+      <div class="avatar-btn" id="nav-avatar" onclick="window.location='profile.html'">A</div>
+    </div>
+  </nav>
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+  <div class="app-body">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="sidebar-avatar">A</div>
+        <div class="sidebar-user-info">
+          <div class="name" id="sidebar-name">Arjun Kumar</div>
+          <div class="role">NLP Student</div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section-label">Main</div>
+        <a class="nav-item" href="dashboard.html"><i class="fa fa-home"></i> Dashboard</a>
+        <a class="nav-item" href="translator.html"><i class="fa fa-language"></i> Translator <span class="badge-pill">NLP</span></a>
+        <a class="nav-item active" href="history.html"><i class="fa fa-history"></i> History</a>
+        <div class="sidebar-section-label" style="margin-top:8px">Account</div>
+        <a class="nav-item" href="profile.html"><i class="fa fa-user-circle"></i> Profile</a>
+        <a class="nav-item" href="settings.html"><i class="fa fa-cog"></i> Settings</a>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="btn-logout" onclick="doLogout()"><i class="fa fa-sign-out-alt"></i> Logout</button>
+      </div>
+    </aside>
+    <main class="main-content">
+      <div class="page-header">
+        <h2><i class="fa fa-history" style="margin-right:8px"></i>Translation History</h2>
+        <p>All your past translations are stored here for reference</p>
+      </div>
+      <div class="history-card">
+        <div class="history-header">
+          <h4>All Translations</h4>
+          <button class="btn-action" style="color:#e74c3c; border-color:#e74c3c" onclick="clearHistory()">
+            <i class="fa fa-trash"></i> Clear All
+          </button>
+        </div>
+        <div id="history-full-body">
+          <div class="empty-history">
+            <i class="fa fa-language"></i>
+            <p>Your translation history will appear here</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<div class="toast-container" id="toast-container"></div>
+<script src="../js/app.js"></script>
+<script src="../js/translator.js"></script>
+<script src="../js/voice.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', async () => {
+    const session = JSON.parse(localStorage.getItem('tnlp_session') || '{}');
+    if (!session.username) return;
+    
+    const API_BASE = `http://${window.location.hostname || 'localhost'}:5000`;
+    try {
+      const res = await fetch(`${API_BASE}/api/history?username=` + session.username);
+      if (!res.ok) return;
+      const hist = await res.json();
+      const el = document.getElementById('history-full-body');
+      if (!hist.length) return;
+      el.innerHTML = `<table class="history-table">
+        <thead><tr><th>#</th><th>Tanglish Input</th><th>Tamil Output</th><th>Time</th></tr></thead>
+        <tbody>${hist.map((h,i) => `<tr>
+          <td style="color:var(--text-muted);font-size:0.78rem">${i+1}</td>
+          <td>${h.input}</td>
+          <td class="tamil-cell">${h.output}</td>
+          <td class="time-cell">${new Date(h.ts).toLocaleString()}</td>
+        </tr>`).join('')}</tbody></table>`;
+    } catch (err) {
+      console.error('Failed to load history:', err);
+    }
+  });
+</script>
+</body>
+</html>

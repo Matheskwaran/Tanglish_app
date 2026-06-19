@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile — Tanglish Tamil Translator</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/profile.css" />
+  <style>
+
+    .row3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
+    @media(max-width:768px){ .row3 { grid-template-columns:1fr; } }
+    .row2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    @media(max-width:600px){ .row2 { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+<div class="app-shell active">
+  <nav class="top-nav">
+    <button class="hamburger-btn" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button>
+    <a class="nav-brand" href="#"><div class="ico">த</div><span>TamilNLP</span></a>
+    <div class="nav-spacer"></div>
+    <div class="nav-actions">
+      <button class="nav-icon-btn"><i class="fa fa-bell"></i></button>
+      <div class="avatar-btn" id="nav-avatar">A</div>
+    </div>
+  </nav>
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+  <div class="app-body">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="sidebar-avatar">A</div>
+        <div class="sidebar-user-info">
+          <div class="name" id="sidebar-name">Arjun Kumar</div>
+          <div class="role">NLP Student</div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section-label">Main</div>
+        <a class="nav-item" href="dashboard.html"><i class="fa fa-home"></i> Dashboard</a>
+        <a class="nav-item" href="translator.html"><i class="fa fa-language"></i> Translator <span class="badge-pill">NLP</span></a>
+        <a class="nav-item" href="history.html"><i class="fa fa-history"></i> History</a>
+        <div class="sidebar-section-label" style="margin-top:8px">Account</div>
+        <a class="nav-item active" href="profile.html"><i class="fa fa-user-circle"></i> Profile</a>
+        <a class="nav-item" href="settings.html"><i class="fa fa-cog"></i> Settings</a>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="btn-logout" onclick="doLogout()"><i class="fa fa-sign-out-alt"></i> Logout</button>
+      </div>
+    </aside>
+    <main class="main-content">
+      <div class="page-header">
+        <h2><i class="fa fa-user" style="margin-right:8px"></i>My Profile</h2>
+        <p>Manage your account information and preferences</p>
+      </div>
+
+      <!-- PROFILE HEADER -->
+      <div class="profile-header-card">
+        <div class="profile-pic-wrap">
+          <div class="profile-pic" id="profile-pic-display" onclick="document.getElementById('pic-upload').click()">
+            <span id="profile-initials">A</span>
+          </div>
+          <div class="pic-upload-badge" onclick="document.getElementById('pic-upload').click()">
+            <i class="fa fa-camera"></i>
+          </div>
+          <input type="file" id="pic-upload" accept="image/*" style="display:none" onchange="handlePicUpload(event)" />
+        </div>
+        <div>
+          <div class="profile-name" id="profile-display-name">Arjun Kumar</div>
+          <div class="profile-meta" id="profile-display-email">arjun@example.com</div>
+          <div class="profile-meta" id="profile-display-college">Sri Eshwar College of Engineering</div>
+          <div class="profile-badges">
+            <span class="pbadge"><i class="fa fa-graduation-cap" style="margin-right:4px"></i>Student</span>
+            <span class="pbadge"><i class="fa fa-fire" style="margin-right:4px"></i>Day <span id="profile-streak-badge">1</span> Streak</span>
+            <span class="pbadge"><i class="fa fa-star" style="margin-right:4px"></i><span id="profile-stars-badge">0</span> Kids Stars</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACHIEVEMENTS CARD -->
+      <div class="form-section">
+        <div class="form-section-header">
+          <i class="fa fa-award"></i><h4>Unlocked Achievements &amp; Badges</h4>
+        </div>
+        <div class="form-section-body">
+          <!-- BADGES SHOWCASE -->
+          <div style="margin-top:24px">
+            <h5 style="font-family:'Cinzel',serif; color:var(--maroon); margin-bottom:12px; font-size:0.95rem">Unlocked Badges</h5>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:12px">
+              <!-- Streak Badge -->
+              <div class="stat-card badge-item locked" id="badge-streak_starter" style="padding:12px; display:flex; flex-direction:column; text-align:center; gap:6px; justify-content:center; align-items:center">
+                <div style="font-size:2.2rem" class="badge-icon">🔥</div>
+                <h5 style="font-size:0.8rem; font-weight:800; margin:0">Streak Starter</h5>
+                <span style="font-size:0.65rem; color:var(--text-muted)">Log in 1 day</span>
+              </div>
+              <!-- Kids Badge -->
+              <div class="stat-card badge-item locked" id="badge-kids_champion" style="padding:12px; display:flex; flex-direction:column; text-align:center; gap:6px; justify-content:center; align-items:center">
+                <div style="font-size:2.2rem" class="badge-icon">🏆</div>
+                <h5 style="font-size:0.8rem; font-weight:800; margin:0">Kids Champion</h5>
+                <span style="font-size:0.65rem; color:var(--text-muted)">100% in Kids Quiz</span>
+              </div>
+              <!-- Voice Badge -->
+              <div class="stat-card badge-item locked" id="badge-voice_commander" style="padding:12px; display:flex; flex-direction:column; text-align:center; gap:6px; justify-content:center; align-items:center">
+                <div style="font-size:2.2rem" class="badge-icon">🗣️</div>
+                <h5 style="font-size:0.8rem; font-weight:800; margin:0">Voice Commander</h5>
+                <span style="font-size:0.65rem; color:var(--text-muted)">Use Voice Command</span>
+              </div>
+              <!-- Gesture Badge -->
+              <div class="stat-card badge-item locked" id="badge-gesture_typer" style="padding:12px; display:flex; flex-direction:column; text-align:center; gap:6px; justify-content:center; align-items:center">
+                <div style="font-size:2.2rem" class="badge-icon">⌨️</div>
+                <h5 style="font-size:0.8rem; font-weight:800; margin:0">Accessibility Hero</h5>
+                <span style="font-size:0.65rem; color:var(--text-muted)">Open Gesture KB</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EDIT PROFILE FORM -->
+      <div class="form-section">
+        <div class="form-section-header">
+          <i class="fa fa-edit"></i><h4>Edit Profile</h4>
+        </div>
+        <div class="form-section-body">
+          <div class="row2" style="margin-bottom:16px">
+            <div>
+              <label class="app-form-label">Full Name</label>
+              <input type="text" class="app-form-control" id="prof-name" value="Arjun Kumar" />
+            </div>
+            <div>
+              <label class="app-form-label">Username</label>
+              <input type="text" class="app-form-control" id="prof-uname" value="arjun_k" />
+            </div>
+            <div>
+              <label class="app-form-label">Email Address</label>
+              <input type="email" class="app-form-control" id="prof-email" value="arjun@example.com" />
+            </div>
+            <div>
+              <label class="app-form-label">Mobile Number</label>
+              <input type="tel" class="app-form-control" id="prof-mobile" placeholder="+91 98765 43210" />
+            </div>
+            <div>
+              <label class="app-form-label">College / School Name</label>
+              <input type="text" class="app-form-control" id="prof-college" value="Sri Eshwar College of Engineering" />
+            </div>
+            <div>
+              <label class="app-form-label">Course / Department</label>
+              <input type="text" class="app-form-control" id="prof-course" value="B.E. Computer Science" />
+            </div>
+          </div>
+          <div style="display:flex; gap:12px; flex-wrap:wrap">
+            <button class="btn-maroon" onclick="saveProfile()"><i class="fa fa-save" style="margin-right:6px"></i>Save Changes</button>
+            <button class="btn-outline-maroon" onclick="document.getElementById('prof-name').focus()"><i class="fa fa-edit" style="margin-right:6px"></i>Edit</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CHANGE PASSWORD -->
+      <div class="form-section">
+        <div class="form-section-header">
+          <i class="fa fa-lock"></i><h4>Change Password</h4>
+        </div>
+        <div class="form-section-body">
+          <div class="row3" style="margin-bottom:16px">
+            <div>
+              <label class="app-form-label">Current Password</label>
+              <input type="password" class="app-form-control" placeholder="••••••••" />
+            </div>
+            <div>
+              <label class="app-form-label">New Password</label>
+              <input type="password" class="app-form-control" placeholder="••••••••" />
+            </div>
+            <div>
+              <label class="app-form-label">Confirm New Password</label>
+              <input type="password" class="app-form-control" placeholder="••••••••" />
+            </div>
+          </div>
+          <button class="btn-maroon" onclick="showToast('Password updated successfully!','success')">
+            <i class="fa fa-key" style="margin-right:6px"></i>Update Password
+          </button>
+        </div>
+      </div>
+
+      <!-- STATS -->
+      <div class="form-section">
+        <div class="form-section-header">
+          <i class="fa fa-chart-bar"></i><h4>Translation Statistics</h4>
+        </div>
+        <div class="form-section-body">
+          <div class="stats-row" style="margin-bottom:0">
+            <div class="stat-card">
+              <div class="stat-icon maroon"><i class="fa fa-language"></i></div>
+              <div><div class="stat-num" id="stat-total-p">0</div><div class="stat-label">Total Translations</div></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon gold"><i class="fa fa-calendar"></i></div>
+              <div><div class="stat-num" id="stat-week-p">0</div><div class="stat-label">This Week</div></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon blue"><i class="fa fa-clock"></i></div>
+              <div><div class="stat-num" id="stat-last-p">–</div><div class="stat-label">Last Login</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; margin-top:8px">
+        <button class="btn-logout" style="border-radius:10px; border:1px solid rgba(192,57,43,0.2)" onclick="doLogout()">
+          <i class="fa fa-sign-out-alt"></i> Logout
+        </button>
+      </div>
+    </main>
+  </div>
+</div>
+<div class="toast-container" id="toast-container"></div>
+<script src="../js/app.js"></script>
+<script src="../js/profile.js"></script>
+<script src="../js/voice.js"></script>
+</body>
+</html>

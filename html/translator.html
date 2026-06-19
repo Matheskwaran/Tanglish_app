@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Translator — Tanglish Tamil Learning Assistant</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/dashboard.css" />
+  <style>
+
+    .info-box {
+      background: rgba(128,0,32,0.04); border-radius: 10px;
+      border: 1px solid var(--border); padding: 16px; margin-top: 16px;
+    }
+    .info-box-label { font-size:0.78rem; color:var(--text-muted); font-weight:600; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:8px; }
+    .info-box p { font-size:0.82rem; color:var(--text-muted); line-height:1.7; }
+    .info-box strong { color:var(--maroon); }
+
+    /* Custom TABS for translator tools */
+    .translator-tabs {
+      display: flex; gap: 8px; margin-bottom: 16px; border-bottom: 2px solid var(--border); padding-bottom: 8px;
+    }
+    .trans-tab-btn {
+      background: none; border: none; padding: 8px 16px; font-weight: 700; color: var(--text-muted);
+      cursor: pointer; border-radius: 8px; font-size: 0.9rem; transition: all 0.2s;
+    }
+    .trans-tab-btn.active {
+      background: var(--maroon); color: var(--gold);
+    }
+    .trans-tab-content { display: none; }
+    .trans-tab-content.active { display: block; }
+
+    /* OCR Styles */
+    .ocr-dropzone {
+      border: 2.5px dashed var(--border); border-radius: 12px; padding: 30px; text-align: center;
+      background: rgba(128,0,32,0.02); cursor: pointer; transition: background 0.2s; margin-bottom: 16px;
+    }
+    .ocr-dropzone:hover { background: rgba(128,0,32,0.06); border-color: var(--maroon); }
+    .ocr-preview { max-width: 100%; max-height: 200px; border-radius: 8px; margin-top: 12px; display: none; }
+    
+    .ocr-camera-panel {
+      display: none; flex-direction: column; align-items: center; gap: 10px;
+      background: rgba(0,0,0,0.03); padding: 16px; border-radius: 12px; margin-bottom: 16px;
+    }
+    .ocr-video-feed { width: 100%; max-width: 320px; border-radius: 8px; background: black; }
+    .ocr-canvas-snap { display: none; }
+
+    /* Gesture Keyboard Styles */
+    .gesture-panel-layout {
+      display: flex; gap: 20px; background: rgba(0,0,0,0.02); padding: 18px; border-radius: 16px;
+      margin-top: 16px; position: relative; border: 1.5px solid var(--border);
+    }
+    @media(max-width: 768px) {
+      .gesture-panel-layout { flex-direction: column; }
+    }
+    .gesture-tracker-box {
+      width: 240px; display: flex; flex-direction: column; gap: 8px; align-items: center;
+      background: var(--card-bg); padding: 12px; border-radius: 12px; border: 1px solid var(--border);
+    }
+    .gesture-video-el { width: 220px; height: 165px; border-radius: 8px; background: #000; display: none; }
+    .gesture-canvas-el { width: 220px; height: 165px; border-radius: 8px; background: #222; }
+    
+    .gesture-kb-box {
+      flex: 1; display: flex; flex-direction: column; gap: 10px; background: var(--card-bg);
+      padding: 16px; border-radius: 12px; border: 1px solid var(--border);
+      position: relative; overflow: hidden; justify-content: center;
+    }
+    .g-kb-row { display: flex; justify-content: center; gap: 6px; }
+    .g-kb-key {
+      flex: 1; height: 42px; border-radius: 8px; border: 1.5px solid var(--border);
+      background: var(--bg); color: var(--text); font-weight: 700; font-size: 0.88rem;
+      cursor: pointer; position: relative; overflow: hidden; display: flex;
+      align-items: center; justify-content: center; transition: background 0.15s;
+    }
+    .g-kb-key.hovered { background: rgba(255, 215, 0, 0.25) !important; border-color: var(--gold-dark); }
+    .g-kb-key.key-activated { background: var(--maroon) !important; color: var(--gold) !important; transform: scale(0.95); }
+    .g-kb-key.space-key { flex: 3; }
+    .g-kb-key.fn-key { background: rgba(128,0,32,0.1); color: var(--maroon); }
+    
+    .key-progress {
+      position: absolute; bottom: 0; left: 0; height: 4px; background: var(--maroon);
+      width: 0%; transition: width 0.05s linear;
+    }
+    .key-txt { position: relative; z-index: 2; pointer-events: none; }
+    
+    #gesture-cursor {
+      position: absolute; width: 18px; height: 18px; border-radius: 50%;
+      background: rgba(46, 204, 113, 0.85); border: 2px solid white;
+      pointer-events: none; transform: translate(-50%, -50%); z-index: 10;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3); display: none;
+    }
+    
+    .loading-spin-wheel {
+      width: 20px; height: 20px; border: 3px solid rgba(128,0,32,0.2);
+      border-radius: 50%; border-top-color: var(--maroon);
+      animation: spin 0.8s linear infinite;
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell active">
+  <nav class="top-nav">
+    <button class="hamburger-btn" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button>
+    <a class="nav-brand" href="#"><div class="ico">த</div><span>TamilNLP</span></a>
+    <div class="nav-spacer"></div>
+    <div class="nav-actions">
+      <button class="nav-icon-btn"><i class="fa fa-bell"></i></button>
+      <div class="avatar-btn" id="nav-avatar" onclick="window.location='profile.html'">A</div>
+    </div>
+  </nav>
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+  <div class="app-body">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="sidebar-avatar">A</div>
+        <div class="sidebar-user-info">
+          <div class="name" id="sidebar-name">Arjun Kumar</div>
+          <div class="role">NLP Student</div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section-label">Main</div>
+        <a class="nav-item" href="dashboard.html"><i class="fa fa-home"></i> Dashboard</a>
+        <a class="nav-item active" href="translator.html"><i class="fa fa-language"></i> Translator <span class="badge-pill">NLP</span></a>
+        <a class="nav-item" href="history.html"><i class="fa fa-history"></i> History</a>
+        <div class="sidebar-section-label" style="margin-top:8px">Account</div>
+        <a class="nav-item" href="profile.html"><i class="fa fa-user-circle"></i> Profile</a>
+        <a class="nav-item" href="settings.html"><i class="fa fa-cog"></i> Settings</a>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="btn-logout" onclick="doLogout()"><i class="fa fa-sign-out-alt"></i> Logout</button>
+      </div>
+    </aside>
+    
+    <main class="main-content">
+      <div class="page-header">
+        <h2 id="trans-title-label"><i class="fa fa-language" style="margin-right:8px"></i>Tamil Learning &amp; Translation Assistant</h2>
+        <p id="trans-desc-label">Explore multiple input modes to learn and translate between English and Tamil script</p>
+      </div>
+
+      <!-- TABS SELECTORS -->
+      <div class="translator-tabs">
+        <button class="trans-tab-btn active" id="tab-btn-text" onclick="switchTransTab('text')"><i class="fa fa-keyboard"></i> Text Transliteration</button>
+        <button class="trans-tab-btn" id="tab-btn-ocr" onclick="switchTransTab('ocr')"><i class="fa fa-camera"></i> Image OCR Reader</button>
+        <button class="trans-tab-btn" id="tab-btn-accessibility" onclick="switchTransTab('accessibility')"><i class="fa fa-universal-access"></i> Gesture Keyboard</button>
+      </div>
+
+      <div class="translator-card">
+        <div class="translator-header">
+          <h3><i class="fa fa-magic" style="margin-right:8px"></i>AI NLP Translation Hub</h3>
+          <!-- Language Swap button -->
+          <div style="display:flex; align-items:center; gap:8px">
+            <span id="label-lang-src" style="font-weight:700; color:var(--maroon); font-size:0.85rem">Tanglish/English</span>
+            <button class="btn-action" style="padding:4px 8px; border-radius:6px; border-color:var(--maroon)" onclick="toggleTranslationDirection()"><i class="fa fa-exchange-alt" style="color:var(--maroon)"></i> Swap</button>
+            <span id="label-lang-tgt" style="font-weight:700; color:var(--gold-dark); font-size:0.85rem">Tamil (தமிழ்)</span>
+          </div>
+        </div>
+        
+        <div class="translator-body">
+          
+          <!-- TAB CONTENT: TEXT -->
+          <div id="trans-content-text" class="trans-tab-content active">
+            <!-- Normal layout is used here -->
+          </div>
+
+          <!-- TAB CONTENT: OCR -->
+          <div id="trans-content-ocr" class="trans-tab-content">
+            <div class="ocr-dropzone" onclick="document.getElementById('ocr-file-input').click()">
+              <i class="fa fa-cloud-upload-alt" style="font-size:3rem; color:var(--maroon); margin-bottom:8px"></i>
+              <h4>Drag &amp; Drop or Click to Upload Image</h4>
+              <p style="font-size:0.82rem; color:var(--text-muted)">Supports PNG, JPG containing Tamil or English text</p>
+              <input type="file" id="ocr-file-input" accept="image/*" style="display:none" onchange="handleOCRUpload(event)" />
+              <img id="ocr-preview-img" class="ocr-preview" />
+            </div>
+
+            <div style="text-align:center; margin-bottom:16px">
+              <span style="color:var(--text-muted); font-size:0.9rem">— OR —</span>
+            </div>
+
+            <div style="text-align:center; margin-bottom:16px">
+              <button class="btn-outline-maroon" onclick="toggleOCRCamera()"><i class="fa fa-camera"></i> Capture from Device Camera</button>
+            </div>
+
+            <!-- OCR Webcam Video Panel -->
+            <div class="ocr-camera-panel" id="ocr-camera-wrapper">
+              <video class="ocr-video-feed" id="ocr-video" autoplay playsinline></video>
+              <canvas class="ocr-canvas-snap" id="ocr-snap-canvas" width="320" height="240"></canvas>
+              <div style="display:flex; gap:8px">
+                <button class="btn-maroon" onclick="captureOCRSnapshot()"><i class="fa fa-circle"></i> Take Snapshot</button>
+                <button class="btn-action" onclick="toggleOCRCamera()"><i class="fa fa-times"></i> Close Camera</button>
+              </div>
+            </div>
+
+            <!-- OCR Loading State -->
+            <div id="ocr-progress-container" style="display:none; flex-direction:column; gap:6px; margin: 16px 0">
+              <div style="display:flex; justify-content:space-between; font-size:0.82rem; font-weight:700">
+                <span id="ocr-status-text">Initializing OCR Engine...</span>
+                <span id="ocr-pct-text">0%</span>
+              </div>
+              <div class="quiz-progress-bar" style="margin-bottom:0; height:8px">
+                <div class="quiz-progress-fill" id="ocr-progress-fill" style="width:0%"></div>
+              </div>
+            </div>
+
+            <button class="btn-maroon" id="btn-run-ocr" onclick="performOCRTextExtraction()" style="width:100%; display:none; margin-bottom:16px">
+              <i class="fa fa-search" style="margin-right:6px"></i>Extract &amp; Translate Text
+            </button>
+          </div>
+
+          <!-- TAB CONTENT: ACCESSIBILITY GESTURE KEYBOARD -->
+          <div id="trans-content-accessibility" class="trans-tab-content">
+            <div style="text-align:center; margin-bottom:14px; display:flex; flex-direction:column; align-items:center; gap:8px">
+              <p style="font-size:0.88rem; color:var(--text-muted)">
+                Move your hand over keys on the camera. Dwell (hold) for 2 seconds to type.
+              </p>
+              <div style="display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:10px">
+                <button class="btn-maroon" id="btn-toggle-gesture" onclick="toggleGestureKeyboard()"><i class="fa fa-keyboard"></i> Open Accessibility Keyboard</button>
+                <div style="display:flex; align-items:center; gap:6px">
+                  <span style="font-size:0.82rem; font-weight:700; color:var(--text-muted)"><i class="fa fa-camera"></i> Camera:</span>
+                  <select id="gesture-camera-select" style="padding:8px 12px; font-size:0.82rem; border-radius:8px; border:1.5px solid var(--border); background:var(--card-bg); color:var(--text)" onchange="changeGestureCamera()"></select>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Gesture Workspace wrapper -->
+            <div class="gesture-panel-layout" id="gesture-section-wrapper" style="display:none">
+              <!-- Loading overlay -->
+              <div id="gesture-loading-overlay" style="position:absolute; inset:0; background:rgba(255,255,255,0.9); z-index:20; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px">
+                <div class="loading-spin-wheel"></div>
+                <span style="font-weight:700; color:var(--maroon)">Loading AI Hand Tracking Model...</span>
+              </div>
+              
+              <!-- Video & tracking canvas -->
+              <div class="gesture-tracker-box">
+                <span style="font-size:0.75rem; font-weight:700; color:var(--text-muted)">WEBCAM FEED</span>
+                <video id="gesture-video" class="gesture-video-el" autoplay muted playsinline></video>
+                <canvas id="gesture-canvas" class="gesture-canvas-el" width="220" height="165"></canvas>
+                <span style="font-size:0.68rem; color:#e67e22; text-align:center; font-weight:600">
+                  <i class="fa fa-info-circle"></i> Mirror camera. Target index finger tip.
+                </span>
+              </div>
+
+              <!-- Virtual Keyboard -->
+              <div class="gesture-kb-box" id="gesture-keyboard">
+                <!-- Keys rendered dynamically -->
+              </div>
+            </div>
+          </div>
+
+          <!-- SHARED TRANSLATOR PANELS -->
+          <div class="translator-panels" style="margin-top:16px">
+            <div>
+              <div class="panel-label"><span class="dot"></span> <span id="lbl-input-title">Tanglish Input (English Script)</span></div>
+              <div style="position:relative">
+                <textarea class="trans-input" id="tanglish-input-2" style="min-height:180px"
+                  placeholder="Type/Paste text or use OCR/Gesture/Voice input..."
+                  oninput="updateChar2()"></textarea>
+                <!-- Voice Assistant Recognition feedback inside text area -->
+                <button class="nav-icon-btn" id="btn-input-mic" onclick="toggleVoiceForInput()" style="position:absolute; bottom:12px; right:12px; width:38px; height:38px; background:var(--maroon); color:white" title="Voice Input"><i class="fa fa-microphone"></i></button>
+              </div>
+              <div class="char-count"><span id="char-count-2">0</span>/1000</div>
+              <div class="quick-phrases" style="margin-top:8px">
+                <div class="quick-chip" onclick="setInput2('Vanakkam! Eppadi irukkinga?')">Greeting</div>
+                <div class="quick-chip" onclick="setInput2('Naan ungalai kadhalikkiren')">Expression</div>
+                <div class="quick-chip" onclick="setInput2('Ini enna pannalaam?')">Question</div>
+                <div class="quick-chip" onclick="setInput2('Romba nandri ungalukku')">Thanks</div>
+              </div>
+            </div>
+            <div class="panel-arrow">
+              <span class="arrow-icon">⟶</span>
+              <button class="btn-translate" onclick="doTranslate2()">
+                <i class="fa fa-bolt" style="margin-right:4px"></i> Translate
+              </button>
+              <span class="arrow-icon">⟶</span>
+            </div>
+            <div>
+              <div class="panel-label"><span class="dot gold"></span> <span id="lbl-output-title">Tamil Output (Unicode)</span></div>
+              <textarea class="trans-input tamil-output" id="tamil-output-2" style="min-height:180px"
+                placeholder="Translation will appear here..." readonly></textarea>
+              <div class="panel-actions">
+                <button class="btn-action gold" onclick="copyOutput2()"><i class="fa fa-copy"></i> Copy</button>
+                <button class="btn-action" onclick="clearAll2()"><i class="fa fa-trash"></i> Clear</button>
+                <button class="btn-action" onclick="speakOutput2()"><i class="fa fa-volume-up"></i> Listen</button>
+                <button class="btn-action" onclick="downloadOutput2()"><i class="fa fa-download"></i> Save</button>
+                <button class="btn-action" id="btn-fav-2" onclick="toggleFavoriteCurrent2()"><i class="fa-regular fa-star"></i> Star</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="info-box">
+            <div class="info-box-label"><i class="fa fa-info-circle" style="color:var(--maroon); margin-right:4px"></i> Multi-Mode Workspace Instructions</div>
+            <p>Welcome! You can type text directly, use the <strong>OCR scan tool</strong> to extract text from images, or use the AI <strong>Webcam hand gesture keyboard</strong> if you have physical accessibility needs. You can also press the floating mic icon on the bottom left for navigation commands, or the mic icon in the text panel for speech-to-text translations!</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<div class="toast-container" id="toast-container"></div>
+<script src="../js/app.js"></script>
+<!-- Tesseract.js for client-side OCR -->
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script src="../js/translator.js"></script>
+<script src="../js/gesture.js"></script>
+<script src="../js/voice.js"></script>
+<script>
+  // Tab Switcher logic
+  function switchTransTab(tabId) {
+    document.querySelectorAll('.trans-tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.trans-tab-content').forEach(cont => cont.classList.remove('active'));
+    
+    document.getElementById('tab-btn-' + tabId).classList.add('active');
+    document.getElementById('trans-content-' + tabId).classList.add('active');
+    
+    // Stop camera track if switching away from accessibility or ocr camera
+    if (tabId !== 'accessibility' && isGestureActive) {
+      toggleGestureKeyboard();
+    }
+    if (tabId !== 'ocr') {
+      stopOCRCamera();
+    }
+  }
+
+  // Bind microphone button in the input panel to voice assistant input
+  let inputVoiceRec = null;
+  function toggleVoiceForInput() {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const btn = document.getElementById('btn-input-mic');
+    if (!SpeechRecognition) {
+      showToast('Speech Recognition not supported in this browser.', 'error');
+      return;
+    }
+    
+    if (inputVoiceRec) {
+      inputVoiceRec.abort();
+      inputVoiceRec = null;
+      btn.style.background = 'var(--maroon)';
+      btn.innerHTML = `<i class="fa fa-microphone"></i>`;
+      return;
+    }
+    
+    inputVoiceRec = new SpeechRecognition();
+    inputVoiceRec.continuous = false;
+    inputVoiceRec.interimResults = false;
+    // Adapt to source translation language setting
+    inputVoiceRec.lang = translationDirection === 'en-ta' ? 'en-US' : 'ta-IN';
+    
+    inputVoiceRec.onstart = () => {
+      btn.style.background = '#e74c3c';
+      btn.innerHTML = `<i class="fa fa-spinner fa-spin"></i>`;
+      showToast('Listening to voice input... 🎙️', 'info');
+    };
+    
+    inputVoiceRec.onresult = (e) => {
+      const text = e.results[0][0].transcript;
+      const inp = document.getElementById('tanglish-input-2');
+      if (inp) {
+        inp.value = text;
+        inp.dispatchEvent(new Event('input'));
+        showToast('Speech captured!', 'success');
+      }
+    };
+    
+    inputVoiceRec.onend = () => {
+      btn.style.background = 'var(--maroon)';
+      btn.innerHTML = `<i class="fa fa-microphone"></i>`;
+      inputVoiceRec = null;
+    };
+    
+    inputVoiceRec.start();
+  }
+</script>
+</body>
+</html>
+
